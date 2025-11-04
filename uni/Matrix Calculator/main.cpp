@@ -2,8 +2,8 @@
 
 using namespace std;
 
-// Addition Logic
-int** addMatrices(int** mat1, int**mat2, int rows1, int cols1, int rows2, int cols2)
+// Addition Function
+double** addMatrices(double** mat1, double**mat2, int rows1, int cols1, int rows2, int cols2)
 {
     //Checking Dimension constraints
     if (rows1 != rows2 || cols1 != cols2)
@@ -14,10 +14,10 @@ int** addMatrices(int** mat1, int**mat2, int rows1, int cols1, int rows2, int co
     else
     {
         // Addition
-        int** result = new int*[rows1];
+        double** result = new double*[rows1];
         for (int i = 0; i < rows1; i++)
         {
-            result[i] = new int[cols1];
+            result[i] = new double[cols1];
             for (int j = 0; j < cols1; j++)
             {
                 result[i][j] = mat1[i][j] + mat2[i][j];
@@ -28,8 +28,8 @@ int** addMatrices(int** mat1, int**mat2, int rows1, int cols1, int rows2, int co
     }  
 }
 
-// Subtraction Logic
-int** subtractMatrices(int** mat1, int**mat2, int rows1, int cols1, int rows2, int cols2)
+// Subtraction Function
+double** subtractMatrices(double** mat1, double**mat2, int rows1, int cols1, int rows2, int cols2)
 {
     //Checking Dimension constraints
     if (rows1 != rows2 || cols1 != cols2)
@@ -40,10 +40,10 @@ int** subtractMatrices(int** mat1, int**mat2, int rows1, int cols1, int rows2, i
     else
     {
         // Subtraction
-        int** result = new int*[rows1];
+        double** result = new double*[rows1];
         for (int i = 0; i < rows1; i++)
         {
-            result[i] = new int[cols1];
+            result[i] = new double[cols1];
             for (int j = 0; j < cols1; j++)
             {
                 result[i][j] = mat1[i][j] - mat2[i][j];
@@ -54,7 +54,8 @@ int** subtractMatrices(int** mat1, int**mat2, int rows1, int cols1, int rows2, i
     }
 }
 
-int** multiplyMatrices(int** mat1, int**mat2, int rows1, int cols1, int rows2, int cols2)
+//Multiplication Function
+double** multiplyMatrices(double** mat1, double**mat2, int rows1, int cols1, int rows2, int cols2)
 {
     // Checking Dimension constraints
     if (cols1 != rows2)
@@ -65,11 +66,11 @@ int** multiplyMatrices(int** mat1, int**mat2, int rows1, int cols1, int rows2, i
     else
     {
         // Multiplication
-        int** result = new int*[rows1];
+        double** result = new double*[rows1];
         //result initialization to 0
         for (int i = 0; i < rows1; i++)
         {
-            result[i] = new int[cols2];
+            result[i] = new double[cols2];
             for (int j = 0; j < cols2; j++)
             {
                 result[i][j] = 0;
@@ -94,13 +95,14 @@ int** multiplyMatrices(int** mat1, int**mat2, int rows1, int cols1, int rows2, i
     }
 }
 
-int** transposeMatrix(int**mat, int rows, int cols)
+//Transpose Function
+double** transposeMatrix(double**mat, int rows, int cols)
 {
     //Result initialization
-    int** result = new int*[cols];
+    double** result = new double*[cols];
     for (int i = 0; i < cols; i++)
     {
-        result[i] = new int[rows];
+        result[i] = new double[rows];
     }
 
     //Transpose
@@ -115,15 +117,13 @@ int** transposeMatrix(int**mat, int rows, int cols)
     return result;
 }
 
-int** subMatrix(int**mat, int rows, int cols, int rpos, int cpos)
+// Function that finds the sub-matrix
+double** subMatrix(double**mat, int rows, int cols, int rpos, int cpos)
 {   //Temp initialization
-    int** tempMatrix = new int*[rows-1];
+    double** tempMatrix = new double*[rows-1];
     for (int i = 0; i < rows-1; i++)
     {
-        for (int j = 0; j < cols-1; j++)
-        {
-            tempMatrix[i] = new int[cols-1];
-        }
+        tempMatrix[i] = new double[cols-1];
     }
     int c = 0;
     int r = 0;
@@ -148,9 +148,10 @@ int** subMatrix(int**mat, int rows, int cols, int rpos, int cpos)
     return tempMatrix;
 }
 
-
-int detMatrix(int** mat, int rows, int cols)
+// Determinant function
+double detMatrix(double** mat, int rows, int cols)
 {
+    if (rows == 1 && cols == 1) return mat[0][0];
     if (rows == 2 && cols == 2)
     {
         return mat[0][0]*mat[1][1] - mat[0][1]*mat[1][0];
@@ -158,7 +159,7 @@ int detMatrix(int** mat, int rows, int cols)
     else
     {
         //Calculating determinant
-        int det = 0;
+        double det = 0;
         for (int i=0; i<cols; i++)
         {
             if (i%2==0)
@@ -174,36 +175,39 @@ int detMatrix(int** mat, int rows, int cols)
     }
 }
 
-int** inverseMatrix(int** mat, int rows, int cols)
+// Inverse matrix function
+double** inverseMatrix(double** mat, int rows, int cols)
 {
     //Result Matrix initialization
-    int** result = new int*[rows];
+    double** result = new double*[rows];
     for (int i=0; i<rows; i++)
     {
-        result[i] = new int[cols];
+        result[i] = new double[cols];
         for (int j=0; j<cols; j++)
         {
             result[i][j] = 0;
         }
     }
-
-    //Calculating the cofactors
+    double total_det = detMatrix(mat, rows, cols);
+    if (total_det == 0) return nullptr;
+    //Calculating the cofactors and multiplying them with 1/Determinant
     for (int i=0; i<rows; i++)
     {
         for (int j=0; j<cols; j++)
         {
             if((i%2==0 && j%2==0) || (i%2==1 && j%2==1))
             {
-                result[i][j] = detMatrix(subMatrix(mat, rows, cols, i, j), rows, cols);
+                result[i][j] = (1.0/total_det)*detMatrix(subMatrix(mat, rows, cols, i, j), rows-1, cols-1);
             }
             else
             {
-                result[i][j] = -detMatrix(subMatrix(mat, rows, cols, i, j), rows, cols);
+                result[i][j] = -(1.0/total_det)*detMatrix(subMatrix(mat, rows, cols, i, j), rows-1, cols-1);
             }
         }
     }
-    //Transposing 
+    //Transposing to get the inverse matrix
     result = transposeMatrix(result, rows, cols);
+
     return result;
 
 }
@@ -215,8 +219,6 @@ void clearInput()
     cin.clear();
     cin.ignore(1000, '\n');
 }
-
-
 
 int main()
 {
@@ -272,16 +274,16 @@ int main()
     }
 
     //Dynamically allocating 2D arrays as matrices
-    int** mat1 = new int*[rows1];
+    double** mat1 = new double*[rows1];
     for (int i = 0; i < rows1; i++)
     {
-        mat1[i] = new int[cols1];
+        mat1[i] = new double[cols1];
     }
 
-    int** mat2 = new int*[rows2];
+    double** mat2 = new double*[rows2];
     for (int i = 0; i < rows2; i++)
     {
-        mat2[i] = new int[cols2];
+        mat2[i] = new double[cols2];
     }
 
     clearInput();
@@ -299,7 +301,7 @@ int main()
                 else
                 {
                     clearInput();
-                    cout << "Invalid input. Please enter an integer" << endl;
+                    cout << "Invalid input. Please enter a number." << endl;
                 }
            }
         }
@@ -318,7 +320,7 @@ int main()
                 else
                 {
                     clearInput();
-                    cout << "Invalid input. Please enter an integer" << endl;
+                    cout << "Invalid input. Please enter a number." << endl;
                 }
             }
         }
@@ -378,8 +380,8 @@ int main()
             }
         cout << '\n';
 
-        int** answer;
-        int num;
+        double** answer;
+        double num;
         int matrixNum;
         switch (choice)
         {
@@ -543,8 +545,7 @@ int main()
                     }
                     else
                     {
-                        num = detMatrix(mat1, rows1, rows2);
-                        cout << "Determinant of Matrix 1 is: " << detMatrix(mat1, rows1, rows2);
+                        cout << "Determinant of Matrix 1 is: " << detMatrix(mat1, rows1, cols1);
                     }
                 }
                 else
@@ -557,7 +558,6 @@ int main()
                         }
                         else
                         {
-                            num = detMatrix(mat2, rows2, rows2);
                             cout << "Determinant of Matrix 2 is: " << detMatrix(mat2, rows2, rows2);
                         }
                     }
@@ -587,6 +587,29 @@ int main()
                     else
                     {
                         answer = inverseMatrix(mat1, rows1, cols1);
+                        if (answer != nullptr)
+                        {
+                            cout << "Matrix 1 after Inversion is:\n" << endl;
+                            for (int i=0; i < cols1; i++)
+                            {
+                                for (int j = 0; j < rows1; j++)
+                                {
+                                    cout << answer[i][j] << " ";
+                                }
+                                cout << endl;
+                            }
+
+                            // Deallocating the answer matrix
+                            for (int i = 0; i < cols1; i++)
+                                {
+                                delete[] answer[i];
+                                }
+                            delete[] answer;
+                        }
+                        else
+                        {
+                            cout << "Inverse doesn't exist and determinant is 0" << endl;
+                        }
                     }
                 }
                 else
@@ -600,6 +623,30 @@ int main()
                         else
                         {
                             answer = inverseMatrix(mat2, rows2, cols2);
+                            if (answer != nullptr)
+                            {
+                                cout << "Matrix 2 after Inversion is:\n" << endl;
+
+                                for (int i=0; i < cols2; i++)
+                                {
+                                    for (int j = 0; j < rows2; j++)
+                                    {
+                                        cout << answer[i][j] << " ";
+                                    }
+                                    cout << endl;
+                                }
+
+                                // Deallocating the answer matrix
+                                for (int i = 0; i < cols2; i++)
+                                    {
+                                    delete[] answer[i];
+                                    }
+                                delete[] answer;
+                            }
+                            else
+                            {
+                                cout << "Inverse doesn't exist as determinant is 0" << endl;
+                            }
                         }
                     }
                     else
