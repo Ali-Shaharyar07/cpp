@@ -116,7 +116,7 @@ int** transposeMatrix(int**mat, int rows, int cols)
 }
 
 int** subMatrix(int**mat, int rows, int cols, int rpos, int cpos)
-{   //Temp init
+{   //Temp initialization
     int** tempMatrix = new int*[rows-1];
     for (int i = 0; i < rows-1; i++)
     {
@@ -127,6 +127,8 @@ int** subMatrix(int**mat, int rows, int cols, int rpos, int cpos)
     }
     int c = 0;
     int r = 0;
+
+    //Filling the sub-matrix
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
@@ -155,23 +157,66 @@ int detMatrix(int** mat, int rows, int cols)
     }
     else
     {
+        //Calculating determinant
         int det = 0;
         for (int i=0; i<cols; i++)
         {
             if (i%2==0)
             {
                 det += mat[0][i]*detMatrix(subMatrix(mat, rows, cols, 0, i), rows-1, cols-1);
-                cout << "i: " << i << " det: " << det << endl;
             }
             else
             {
                 det -= mat[0][i]*detMatrix(subMatrix(mat, rows, cols, 0, i), rows-1, cols-1);
-                cout << "i: " << i << " det: " << det << endl;
             }
         }
         return det;
     }
 }
+
+int** inverseMatrix(int** mat, int rows, int cols)
+{
+    //Result Matrix initialization
+    int** result = new int*[rows];
+    for (int i=0; i<rows; i++)
+    {
+        result[i] = new int[cols];
+        for (int j=0; j<cols; j++)
+        {
+            result[i][j] = 0;
+        }
+    }
+
+    //Calculating the cofactors
+    for (int i=0; i<rows; i++)
+    {
+        for (int j=0; j<cols; j++)
+        {
+            if((i%2==0 && j%2==0) || (i%2==1 && j%2==1))
+            {
+                result[i][j] = detMatrix(subMatrix(mat, rows, cols, i, j), rows, cols);
+            }
+            else
+            {
+                result[i][j] = -detMatrix(subMatrix(mat, rows, cols, i, j), rows, cols);
+            }
+        }
+    }
+    //Transposing 
+    result = transposeMatrix(result, rows, cols);
+    return result;
+
+}
+
+
+//Function to clear the input stream
+void clearInput()
+{
+    cin.clear();
+    cin.ignore(1000, '\n');
+}
+
+
 
 int main()
 {
@@ -179,52 +224,49 @@ int main()
     int rows1, cols1, rows2, cols2;
     cout << "Enter number of rows for matrix 1: ";
     cin >> rows1;
+
     // Input validation
     while (rows1 <= 0 || rows1 > 10)
     {
-        cin.clear();
-        cin.ignore(1000, '\n');
+        clearInput();
         cout << "Please enter a valid number of rows (1-10): ";
         cin >> rows1;
     }
 
-    // Clearing input buffer
-    cin.clear();
-    cin.ignore(1000, '\n');
+    clearInput();
+
     cout << "Enter number of columns for matrix 1: ";
     cin >> cols1;
     // Input validation
     while (cols1 <= 0 || cols1 > 10)
     {
-        cin.clear();
-        cin.ignore(1000, '\n');
+        clearInput();
         cout << "Please enter a valid number of columns (1-10): ";
         cin >> cols1;
     } 
     cout << '\n';
 
-    cin.clear();
-    cin.ignore(1000, '\n');
+    clearInput();
+    
+
     cout << "Enter number of rows for matrix 2: ";
     cin >> rows2;
     // Input validation
     while (rows2 <= 0 || rows2 > 10)
     {
-        cin.clear();
-        cin.ignore(1000, '\n');
+        clearInput();
         cout << "Please enter a valid number of rows (1-10): ";
         cin >> rows2;
     }
 
-    cin.clear();
-    cin.ignore(1000, '\n');
+    clearInput();
+
     cout << "Enter number of columns for matrix 2: ";
     cin >> cols2;
     // Input validation
     while (cols2 <= 0 || cols2 > 10)
     {
-        cin.clear();
-        cin.ignore(1000, '\n');
+        clearInput();
         cout << "Please enter a valid number of columns (1-10): ";
         cin >> cols2;
     }
@@ -242,8 +284,8 @@ int main()
         mat2[i] = new int[cols2];
     }
 
-    cin.clear();
-    cin.ignore(1000, '\n');
+    clearInput();
+    
     // User input to fill the matrices
     cout << "\nEnter elements of the matrix 1: ";
     for (int i = 0; i < rows1; i++)
@@ -256,15 +298,14 @@ int main()
                     break;
                 else
                 {
-                    cin.clear();
-                    cin.ignore(1000, '\n');
+                    clearInput();
                     cout << "Invalid input. Please enter an integer" << endl;
                 }
            }
         }
     }
-    cin.clear();
-    cin.ignore(1000, '\n');
+    clearInput();
+    
     cout << "\nEnter elements of the matrix 2: ";
     for (int i = 0; i < rows2; i++)
     {
@@ -276,15 +317,14 @@ int main()
                     break;
                 else
                 {
-                    cin.clear();
-                    cin.ignore(1000, '\n');
+                    clearInput();
                     cout << "Invalid input. Please enter an integer" << endl;
                 }
             }
         }
     }
-    cin.clear();
-    cin.ignore(1000, '\n');
+    clearInput();
+    
 
     // Displaying the matrices
     cout << "\nMatrix 1 is:\n" << endl;
@@ -323,7 +363,8 @@ int main()
         cout << "3. Multiplication" << endl;
         cout << "4. Transpose" << endl;
         cout << "5. Determinant" << endl;
-        cout << "6. Exit" << endl;
+        cout << "6. Inverse" << endl;
+        cout << "7. Exit" << endl;
         cout << "\nEnter your choice: ";
         while (true)
             {
@@ -331,14 +372,14 @@ int main()
                     break;
                 else
                 {
-                    cin.clear();
-                    cin.ignore(1000, '\n');
+                    clearInput();
                     cout << "Invalid input. Please enter an integer" << endl;
                 }
             }
         cout << '\n';
 
         int** answer;
+        int num;
         int matrixNum;
         switch (choice)
         {
@@ -431,8 +472,8 @@ int main()
                 cout << "You chose Transpose" << endl;
                 cout << "Enter 1 to transpose Matrix 1 or 2 to transpose Matrix 2: ";
                 cin >> matrixNum;
-                cin.clear();
-                cin.ignore(1000, '\n');
+                clearInput();
+                
                 if (matrixNum == 1)
                 {
                     answer = transposeMatrix(mat1, rows1, cols1);
@@ -491,9 +532,9 @@ int main()
                 cout << "You chose Determinant" << endl;
                 cout << "Enter 1 to calculate Matrix 1 Determinant or 2 to calculate Matrix 2 Determinant: ";
                 cin >> matrixNum;
-                cin.clear();
-                cin.ignore(1000, '\n');
-                int ans;
+                clearInput();
+                
+                //Dimension Checking
                 if (matrixNum == 1)
                 {
                     if (rows1 != cols1)
@@ -502,7 +543,7 @@ int main()
                     }
                     else
                     {
-                        ans = detMatrix(mat1, rows1, rows2);
+                        num = detMatrix(mat1, rows1, rows2);
                         cout << "Determinant of Matrix 1 is: " << detMatrix(mat1, rows1, rows2);
                     }
                 }
@@ -516,7 +557,7 @@ int main()
                         }
                         else
                         {
-                            ans = detMatrix(mat2, rows2, rows2);
+                            num = detMatrix(mat2, rows2, rows2);
                             cout << "Determinant of Matrix 2 is: " << detMatrix(mat2, rows2, rows2);
                         }
                     }
@@ -531,6 +572,46 @@ int main()
                 break;
             
             case 6:
+                cout << "You chose Inverse" << endl;
+                cout << "Enter 1 to calculate Inverse of Matrix 1 or 2 to calculate Inverse of Matrix 2: ";
+                cin >> matrixNum;
+                clearInput();
+                
+                
+                if (matrixNum == 1)
+                {
+                    if (rows1 != cols1)
+                    {
+                        cout << "Dimension mismatch." << endl;
+                    }
+                    else
+                    {
+                        answer = inverseMatrix(mat1, rows1, cols1);
+                    }
+                }
+                else
+                {
+                    if (matrixNum == 2)
+                    {
+                        if (rows2 != cols2)
+                        {
+                            cout << "Dimension mismatch." << endl;
+                        }
+                        else
+                        {
+                            answer = inverseMatrix(mat2, rows2, cols2);
+                        }
+                    }
+                    else
+                    {
+                        cout << "Invalid choice!" << endl;
+                        answer = nullptr;
+                        break;
+                    }
+                }
+                break;
+
+            case 7:
                 cout << "Exiting the program." << endl;
                 isRunning = false;
                 break;
@@ -554,7 +635,6 @@ int main()
         delete[] mat2[i];
     }
     delete[] mat2;
-
     return 0;
 }
 
