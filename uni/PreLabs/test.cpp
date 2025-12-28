@@ -1,25 +1,25 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
-const int CAPACITY = 5;
-int values[CAPACITY];
 
-void print_array(int size)
-{
-for(int i=0;i<size;i++)
-cout<< values[i]<<endl;
-}
+
+
+
+
 int main() {
-int size=0;
-int i=0;
-int input;
-while (cin >> input)
-{
-if (size < CAPACITY)
-{
-values[size] = input;
-size++;
-}
-}
-print_array(size);
+
+    int t[] = {1, 2, 3, 4, 5};
+    vector<int> v;
+    
+    //cout << "size: " << v.size() << " first: " << v[0] << " 5th: " << v[4] <<  endl;
+    cout << "VECTOR size: " << v.size() << " Capacity: " << v.capacity() << endl;
+    v.reserve(10);
+    for (int i=0; i<10; i++)
+    {
+        v.push_back(i);
+        cout << v.at(i) << " size: " << v.size() << " Capacity: " << v.capacity() << endl;
+    }
+        
+    cout << endl;
 }
