@@ -1,2 +1,2 @@
 # cpp
-General C++ learning, coursework, and DSA
+General C++ learning, coursework, and DSA.
